@@ -1,6 +1,6 @@
 import * as THREE from 'three';
+import { Controls } from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.js';
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color("rgb(20, 20, 20)");
@@ -33,24 +33,32 @@ spotLight.target = camera;
 // const spotLightHelper = new THREE.SpotLightHelper( spotLight );
 // camera.add(spotLightHelper);
 
-// Controller
-const fpsControl = new FirstPersonControls(camera, renderer.domElement);
-fpsControl.lookSpeed = 0.1;
-fpsControl.movementSpeed = 5.0;
-
 const loader = new GLTFLoader();
-loader.load( 'models/staircase.glb', function ( gltf ) {
-  scene.add( gltf.scene );
-}, undefined, function ( error ) {
-  console.error( error );
-} );
+const gltf = await loader.loadAsync( 'models/room.glb' );
+scene.add( gltf.scene );
 
 const time = new THREE.Clock();
 function animate() {
 	const delta = time.getDelta();
 
 	renderer.render( scene, camera );
-	fpsControl.update(delta);
+	// fpsControl.update(delta);
+}
+
+// const fpsControl = new FirstPersonControls(camera, renderer.domElement);
+// fpsControl.lookSpeed = 0.1;
+// fpsControl.movementSpeed = 5.0;
+
+
+function fps_camera(camera){
+
 }
 
 renderer.setAnimationLoop( animate );
+
+// // Controller
+const fpsControl = new Controls(camera, renderer.domElement);
+// fpsControl.keys
+
+// Keyboard down event
+const moveSpeed = 1.0;
