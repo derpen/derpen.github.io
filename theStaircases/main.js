@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { Controls } from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { FPSCam } from './firstperson.js';
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color("rgb(20, 20, 20)");
@@ -8,7 +9,7 @@ const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.inner
 
 // For some reason position is read only?
 // Is there another way to use Vector directly?
-const camera_pos = new THREE.Vector3(0.0, 3.0, 5.0);
+const camera_pos = new THREE.Vector3(0.0, 1.3, 4.0);
 camera.position.y = camera_pos.y;
 camera.position.z = camera_pos.z;
 
@@ -42,23 +43,10 @@ function animate() {
 	const delta = time.getDelta();
 
 	renderer.render( scene, camera );
-	// fpsControl.update(delta);
-}
-
-// const fpsControl = new FirstPersonControls(camera, renderer.domElement);
-// fpsControl.lookSpeed = 0.1;
-// fpsControl.movementSpeed = 5.0;
-
-
-function fps_camera(camera){
-
+	fpsControl.update(delta);
 }
 
 renderer.setAnimationLoop( animate );
 
-// // Controller
-const fpsControl = new Controls(camera, renderer.domElement);
-// fpsControl.keys
-
-// Keyboard down event
-const moveSpeed = 1.0;
+// FPS cam
+const fpsControl = new FPSCam(camera, renderer.domElement);
