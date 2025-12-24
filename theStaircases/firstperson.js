@@ -14,12 +14,14 @@ class FPSCam extends Controls {
 		this._onKeyUp = onKeyUp.bind( this );
 
 		this.movementSpeed = 1.0;
+		this.sprintMultiplier = 2.0;
 		this.lookSpeed = 0.005;
 
 		this._moveForward = false;
 		this._moveBackward = false;
 		this._moveLeft = false;
 		this._moveRight = false;
+		this._isSprinting = false;
 
 		if ( domElement !== null ) {
 			this.connect( domElement );
@@ -43,7 +45,10 @@ class FPSCam extends Controls {
 	}
 
 	update( delta ) {
-		const actualMoveSpeed = delta * this.movementSpeed;
+		let actualMoveSpeed = delta * this.movementSpeed;
+
+		if ( this._isSprinting )
+			actualMoveSpeed *= this.sprintMultiplier;
 
 		if ( this._moveForward ) this.object.translateZ( - actualMoveSpeed );
 		if ( this._moveBackward ) this.object.translateZ( actualMoveSpeed );
@@ -67,6 +72,9 @@ function onKeyDown( event ) {
 
 		case 'ArrowRight':
 		case 'KeyD': this._moveRight = true; break;
+
+		case 'ShiftLeft':
+		case 'ShiftRight': this._isSprinting = true; break;
 	}
 }
 
@@ -83,6 +91,9 @@ function onKeyUp( event ) {
 
 		case 'ArrowRight':
 		case 'KeyD': this._moveRight = false; break;
+
+		case 'ShiftLeft':
+		case 'ShiftRight': this._isSprinting = false; break;
 	}
 }
 
