@@ -7,11 +7,13 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color("rgb(20, 20, 20)");
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.001, 1000 );
 
-// For some reason position is read only?
-// Is there another way to use Vector directly?
 const camera_pos = new THREE.Vector3(0.0, 1.3, 4.0);
 camera.position.y = camera_pos.y;
 camera.position.z = camera_pos.z;
+
+const player_object = new THREE.Object3D();
+player_object.add(camera)
+player_object.position.set(0.0, 0.0, 0.0);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -27,7 +29,8 @@ spotLight.penumbra = 0.1;
 
 camera.add(spotLight);
 spotLight.position.set( 0, 0, 1);
-scene.add(camera);
+// scene.add(camera);
+scene.add(player_object);
 spotLight.target = camera;
  
 // // Flashlight debug, can be commented
@@ -46,7 +49,8 @@ function animate() {
 	fpsControl.update(delta);
 }
 
-renderer.setAnimationLoop( animate );
+// Turn it into First Person Camera
+const fpsControl = new FPSCam(player_object, renderer.domElement, new THREE.Vector2( window.innerWidth, window.innerHeight ) );
+fpsControl.movementSpeed = 5.0;
 
-// FPS cam
-const fpsControl = new FPSCam(camera, renderer.domElement);
+renderer.setAnimationLoop( animate );
